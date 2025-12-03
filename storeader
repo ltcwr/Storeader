@@ -7,8 +7,21 @@ BLUE="\e[34m"
 RESET="\e[0m"
 
 if ! command -v cast >/dev/null 2>&1; then
-    echo -e "${RED}cast is not installed${RESET}"
-    exit 1
+    echo -e "${RED}Foundry (cast) is not installed.${RESET}"
+    read -p "Do you want to install Foundry now? (y/n): " install_choice
+    if [[ "$install_choice" =~ ^[Yy]$ ]]; then
+        curl -L https://foundry.paradigm.xyz | bash
+        source ~/.bashrc 2>/dev/null || source ~/.zshrc 2>/dev/null
+        if command -v foundryup >/dev/null 2>&1; then
+            foundryup
+        else
+            echo -e "${RED}foundryup not found after installation.${RESET}"
+            exit 1
+        fi
+    else
+        echo -e "${RED}Foundry is required. Exiting.${RESET}"
+        exit 1
+    fi
 fi
 
 echo -e "\n\n"
